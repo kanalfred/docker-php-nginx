@@ -1,5 +1,6 @@
 # check phpmyadmin example supervisor
 # http://geekyplatypus.com/dockerise-your-php-application-with-nginx-and-php7-fpm/
+# socket fastcgi_pass config : /usr/local/etc/php-fpm.d/www.conf
 # docker run --name php-nginx -p 8080:80 -v /home/alfred/workspace/docker/docker-php-nginx/code:/code -d kanalfred/php-nginx
 FROM php:7.1-fpm
 
@@ -55,11 +56,6 @@ RUN apt-get update \
  && docker-php-ext-install -j "$(nproc)" gd mbstring mysqli pdo pdo_mysql zip
  #&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
  #&& a2enmod rewrite \ 
-
- # replace php tcp to socket
- # /usr/local/etc/php-fpm.d/www.conf
- # fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
- # listen = /var/run/php-fpm/php-fpm.sock
 
  RUN apt-get update \
   && apt-get install -y supervisor 
