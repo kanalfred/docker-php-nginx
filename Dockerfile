@@ -31,6 +31,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 
 ### Custom ###
 COPY etc /etc/
+COPY config/opcache.ini /usr/local/etc/php/conf.d/
 
 # php lib & extensions
 RUN apt-get update \
@@ -40,7 +41,7 @@ RUN apt-get update \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
         libpng12-dev \
- && docker-php-ext-install -j "$(nproc)" gd mbstring mysqli pdo pdo_mysql zip
+ && docker-php-ext-install -j "$(nproc)" gd mbstring mysqli pdo pdo_mysql zip opcache
  #&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
 
  RUN apt-get update \
