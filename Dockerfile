@@ -3,6 +3,7 @@
 # socket fastcgi_pass config : /usr/local/etc/php-fpm.d/www.conf
 # tuning: http://www.softwareprojects.com/resources/programming/t-optimizing-nginx-and-php-fpm-for-high-traffic-sites-2081.html
 # docker run --name php-nginx -p 8080:80 -v /home/alfred/workspace/docker/docker-php-nginx/code:/code -d kanalfred/php-nginx
+# docker run --name php-nginx -p 8080:80 -v $PWD:/code -d kanalfred/php-nginx
 FROM php:7.1-fpm
 
 ### [Nginx Copy Start] ###
