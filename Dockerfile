@@ -1,9 +1,22 @@
-# check phpmyadmin example supervisor
-# http://geekyplatypus.com/dockerise-your-php-application-with-nginx-and-php7-fpm/
-# socket fastcgi_pass config : /usr/local/etc/php-fpm.d/www.conf
-# tuning: http://www.softwareprojects.com/resources/programming/t-optimizing-nginx-and-php-fpm-for-high-traffic-sites-2081.html
-# docker run --name php-nginx -p 8080:80 -v /home/alfred/workspace/docker/docker-php-nginx/code:/code -d kanalfred/php-nginx
-# docker run --name php-nginx -p 8080:80 -v $PWD:/code -d kanalfred/php-nginx
+# Refer:
+#   check phpmyadmin example supervisor
+#   http://geekyplatypus.com/dockerise-your-php-application-with-nginx-and-php7-fpm/
+#   socket fastcgi_pass config : /usr/local/etc/php-fpm.d/www.conf
+#   tuning: http://www.softwareprojects.com/resources/programming/t-optimizing-nginx-and-php-fpm-for-high-traffic-sites-2081.html
+# SSL generate (non expire):
+#   sudo openssl req -x509 -nodes -days -1 -newkey rsa:2048 -keyout ssl/nginx.key -out ssl/nginx.crt
+# Mount config;
+#   site dir:           /www/site
+#   site config :       /etc/nginx/conf.d/*.conf
+# Permission:
+#   user:  hostadmin uid 1000
+#   group: hostadmin gid 1000
+# Build:
+#   docker build -t test/php-nginx .
+# Run:
+#    docker run --name php-nginx -p 8080:80 -p 443:443 -v $PWD/site:/www/site -d kanalfred/php-nginx
+
+
 FROM php:7.1-fpm
 
 ### [Nginx Copy Start] ###
@@ -33,6 +46,14 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 ### Custom ###
 COPY etc /etc/
 COPY config/opcache.ini /usr/local/etc/php/conf.d/
+COPY code /www/site
+
+# user permission
+#https://stackoverflow.com/questions/23544282/what-is-the-best-way-to-manage-permissions-for-docker-shared-volumes
+RUN groupadd -g 1000 -r hostadmin \
+    && useradd -u 1000 -r -g hostadmin hostadmin \
+    && chown -R hostadmin:hostadmin /www/site \
+    && usermod -a -G nginx hostadmin 
 
 # php lib & extensions
 RUN apt-get update \
@@ -46,8 +67,9 @@ RUN apt-get update \
  #&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
 
  RUN apt-get update \
-  && apt-get install -y supervisor 
+    && apt-get install -y supervisor 
 
 EXPOSE 80 443 9000
+#USER hostadmin
 
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
