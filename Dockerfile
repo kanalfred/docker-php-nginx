@@ -14,7 +14,8 @@
 # Build:
 #   docker build -t test/php-nginx .
 # Run:
-#    docker run --name php-nginx -p 8080:80 -p 443:443 -v $PWD/site:/www/site -d kanalfred/php-nginx
+#    docker run --name web1      -p 8001:80 -p 443:443 -v $PWD/web1:/www -d kanalfred/php-nginx
+#    docker run --name php-nginx -p 8080:80 -p 443:443 -v $PWD/site:/www -d kanalfred/php-nginx
 
 
 FROM php:7.1-fpm
