@@ -53,7 +53,10 @@ COPY code /www/site
 RUN groupadd -g 1000 -r hostadmin \
     && useradd -u 1000 -r -g hostadmin hostadmin \
     && chown -R hostadmin:hostadmin /www/site \
-    && usermod -a -G nginx hostadmin 
+    && usermod -a -G nginx hostadmin \
+    && usermod -a -G www-data hostadmin \
+    && usermod -a -G root hostadmin && \
+    ln -s /etc/nginx/conf.d /www/conf
 
 # php lib & extensions
 RUN apt-get update \
@@ -69,6 +72,7 @@ RUN apt-get update \
  RUN apt-get update \
     && apt-get install -y supervisor 
 
+WORKDIR /www/site
 EXPOSE 80 443 9000
 #USER hostadmin
 
