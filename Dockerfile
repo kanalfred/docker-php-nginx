@@ -24,15 +24,16 @@ FROM php:7.1-fpm
 ENV NGINX_VERSION 1.10.3-1~jessie
 
 RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62 \
-	&& echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list \
-	&& apt-get update \
+	&& echo "deb http://nginx.org/packages/debian/ jessie nginx" >> /etc/apt/sources.list
+
+RUN  apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
-						ca-certificates \
+						ca-certificates
 	# seperate install statement to resolve nginx'smodule depending nginx package
-	&& apt-get install --no-install-recommends --no-install-suggests -y \
-						nginx=${NGINX_VERSION} \
+RUN  apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
+						nginx=${NGINX_VERSION}
 	# seperate install statement to resolve nginx'smodule depending nginx package
-	&& apt-get install --no-install-recommends --no-install-suggests -y \
+RUN  apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
 						nginx-module-xslt \
 						nginx-module-geoip \
 						nginx-module-image-filter \
