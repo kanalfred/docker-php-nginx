@@ -28,6 +28,8 @@ RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 573BFD6B3D8FBC64107
 	&& apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
 						ca-certificates \
+	# seperate install statement to resolve nginx'smodule depending nginx package
+	&& apt-get install --no-install-recommends --no-install-suggests -y \
 						nginx=${NGINX_VERSION} \
 	# seperate install statement to resolve nginx'smodule depending nginx package
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
